@@ -32,7 +32,7 @@ target 'Runner' do
 
   flutter_install_all_ios_pods __dir__
 
-  pod 'linphone-sdk', :path => './linphone-sdk.podspec'
+  pod 'linphone-sdk', :podspec => './linphone-sdk.podspec'
 end
 
 post_install do |installer|
