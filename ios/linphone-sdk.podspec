@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Belledonne Communications' => 'contact@belledonne-communications.com' }
   s.platform         = :ios, '13.0'
   s.source           = { :http => 'https://download.linphone.org/releases/ios/linphone-sdk-5.4.124.zip' }
-  s.vendored_frameworks = '**/XCFrameworks/linphone.xcframework', '**/XCFrameworks/bctoolbox.xcframework', '**/XCFrameworks/belle-sip.xcframework', '**/XCFrameworks/mediastreamer2.xcframework', '**/XCFrameworks/ortp.xcframework'
+  s.vendored_frameworks = '**/XCFrameworks/linphone.xcframework', '**/XCFrameworks/bctoolbox.xcframework', '**/XCFrameworks/belle-sip.xcframework', '**/XCFrameworks/mediastreamer2.xcframework', '**/XCFrameworks/ortp.xcframework', '**/XCFrameworks/mbedtls.xcframework', '**/XCFrameworks/belr.xcframework', '**/XCFrameworks/lime.xcframework', '**/XCFrameworks/jsoncpp.xcframework'
   s.source_files     = '**/share/linphonesw/**/*.swift'
   s.module_name      = 'linphonesw'
   s.swift_version    = '5.0'
