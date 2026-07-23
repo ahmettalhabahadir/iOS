@@ -14,7 +14,7 @@ class LinphoneVideoViewFactory: NSObject, FlutterPlatformViewFactory {
 
     func create(
         withFrame frame: CGRect,
-        viewId: Int64,
+        viewIdentifier viewId: Int64,
         arguments args: Any?
     ) -> FlutterPlatformView {
         return LinphoneVideoView(
