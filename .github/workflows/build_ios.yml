@@ -7,19 +7,23 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
+          cache: true
 
-      - name: Install Pods
+      - name: Select Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer || true
+
+      - name: Get Dependencies & Install Pods
         run: |
+          flutter pub get
           cd ios
-          pod install
+          pod install --repo-update || pod install
 
       - name: Build iOS Simulator App
         run: flutter build ios --simulator --no-codesign
