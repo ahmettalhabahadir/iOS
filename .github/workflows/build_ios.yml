@@ -1,0 +1,36 @@
+name: Build iOS Simulator App
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install
+
+      - name: Build iOS Simulator App
+        run: flutter build ios --simulator --no-codesign
+
+      - name: Zip Runner.app
+        run: |
+          cd build/ios/iphonesimulator
+          zip -r Runner.app.zip Runner.app
+
+      - name: Upload iOS App Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-app
+          path: build/ios/iphonesimulator/Runner.app.zip
