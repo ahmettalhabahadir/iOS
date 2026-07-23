@@ -30,8 +30,7 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
 
-  flutter_install_ios_engine_pod __dir__
-  flutter_install_plugin_pods __dir__
+  flutter_install_all_ios_pods __dir__
 
   pod 'linphone-sdk', '~> 5.2'
 end
