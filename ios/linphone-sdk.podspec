@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.source_files     = '**/share/linphonesw/**/*.swift'
   s.module_name      = 'linphonesw'
   s.swift_version    = '5.0'
+  s.static_framework = true
   s.frameworks       = 'AVFoundation', 'AudioToolbox', 'CoreMedia', 'CoreMotion', 'VideoToolbox', 'SystemConfiguration'
-  s.framework        = 'linphone', 'belle-sip', 'bctoolbox'
   s.libraries        = 'c++', 'sqlite3', 'xml2', 'z'
   s.pod_target_xcconfig  = { 'VALID_ARCHS' => 'arm64 x86_64', 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
   s.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 x86_64' }
