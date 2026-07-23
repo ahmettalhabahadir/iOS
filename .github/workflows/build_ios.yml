@@ -17,6 +17,9 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Disable Swift Package Manager (CocoaPods-only build)
+        run: flutter config --no-enable-swift-package-manager
+
       - name: Get Dependencies
         run: flutter pub get
 
