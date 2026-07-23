@@ -32,19 +32,22 @@ import linphonesw
         let localFactory = LinphoneVideoViewFactory(messenger: controller.binaryMessenger, isPreview: true)
         registrar(forPlugin: "LinphoneVideoViewLocal")?.register(localFactory, withId: "com.softphone.call/local_preview_view")
 
-        initLinphoneCore()
-
         channel?.setMethodCallHandler { [weak self] (call, result) in
             self?.handleMethodCall(call, result: result)
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.initLinphoneCore()
         }
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     private func initLinphoneCore() {
+        guard core == nil else { return }
         do {
             let factory = Factory.Instance
-            let c = try factory.createCore(configPath: "", factoryConfigPath: "", systemContext: nil)
+            let c = try factory.createCore(configPath: nil, factoryConfigPath: nil, systemContext: nil)
             c.addDelegate(delegate: self)
 
             c.videoCaptureEnabled = true
@@ -59,8 +62,9 @@ import linphonesw
             try c.start()
             self.core = c
             AppDelegate.sharedCore = c
+            print("[iOS Linphone] Core initialized successfully")
         } catch {
-            print("[iOS Linphone] Failed to initialize core: \(error)")
+            print("[iOS Linphone] Core initialization deferred: \(error)")
         }
     }
 
