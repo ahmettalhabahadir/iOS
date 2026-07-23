@@ -1,6 +1,6 @@
 import Flutter
 import UIKit
-import linphonesdk
+import linphone
 
 class LinphoneVideoViewFactory: NSObject, FlutterPlatformViewFactory {
     private var messenger: FlutterBinaryMessenger

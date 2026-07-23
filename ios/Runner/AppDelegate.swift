@@ -1,6 +1,6 @@
 import Flutter
 import UIKit
-import linphonesdk
+import linphone
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, CoreDelegate {
