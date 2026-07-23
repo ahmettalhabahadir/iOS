@@ -58,8 +58,8 @@ class LinphoneVideoView: NSObject, FlutterPlatformView {
     private func bindToLinphoneCore() {
         guard let lc = AppDelegate.sharedCore else { return }
         
-        lc.isVideoDisplayEnabled = true
-        lc.isVideoCaptureEnabled = true
+        lc.videoDisplayEnabled = true
+        lc.videoCaptureEnabled = true
 
         let pointer = Unmanaged.passUnretained(_view).toOpaque()
         if isPreview {

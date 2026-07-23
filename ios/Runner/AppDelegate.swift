@@ -27,10 +27,10 @@ import linphonesw
 
         // Register Video Platform Views for iOS
         let remoteFactory = LinphoneVideoViewFactory(messenger: controller.binaryMessenger, isPreview: false)
-        registrar(forPlugin: "LinphoneVideoViewRemote").register(remoteFactory, withId: "com.softphone.call/remote_video_view")
+        registrar(forPlugin: "LinphoneVideoViewRemote")?.register(remoteFactory, withId: "com.softphone.call/remote_video_view")
 
         let localFactory = LinphoneVideoViewFactory(messenger: controller.binaryMessenger, isPreview: true)
-        registrar(forPlugin: "LinphoneVideoViewLocal").register(localFactory, withId: "com.softphone.call/local_preview_view")
+        registrar(forPlugin: "LinphoneVideoViewLocal")?.register(localFactory, withId: "com.softphone.call/local_preview_view")
 
         initLinphoneCore()
 
@@ -45,15 +45,16 @@ import linphonesw
         do {
             let factory = Factory.Instance
             let c = try factory.createCore(configPath: "", factoryConfigPath: "", systemContext: nil)
-            c.add(delegate: self)
+            c.addDelegate(delegate: self)
 
-            c.isVideoCaptureEnabled = true
-            c.isVideoDisplayEnabled = true
+            c.videoCaptureEnabled = true
+            c.videoDisplayEnabled = true
 
-            let policy = c.videoActivationPolicy
-            policy.automaticallyInitiate = true
-            policy.automaticallyAccept = true
-            c.videoActivationPolicy = policy
+            if let policy = c.videoActivationPolicy {
+                policy.automaticallyInitiate = true
+                policy.automaticallyAccept = true
+                c.videoActivationPolicy = policy
+            }
 
             try c.start()
             self.core = c
@@ -101,9 +102,9 @@ import linphonesw
 
         case "answer":
             if let currentCall = c.currentCall ?? c.calls.first(where: { $0.state == .IncomingReceived }) {
-                let isVideo = currentCall.remoteParams?.isVideoEnabled ?? false
-                if let params = c.createCallParams(call: currentCall) {
-                    params.isVideoEnabled = isVideo
+                let isVideo = currentCall.remoteParams?.videoEnabled ?? false
+                if let params = try? c.createCallParams(call: currentCall) {
+                    params.videoEnabled = isVideo
                     try? currentCall.acceptWithParams(params: params)
                 } else {
                     try? currentCall.accept()
@@ -141,7 +142,7 @@ import linphonesw
         case "toggleCamera":
             if let args = call.arguments as? [String: Any],
                let enabled = args["enabled"] as? Bool {
-                c.isVideoCaptureEnabled = enabled
+                c.videoCaptureEnabled = enabled
             }
             result(nil)
 
@@ -149,7 +150,7 @@ import linphonesw
             let currentDev = c.videoDevice
             let devs = c.videoDevicesList
             if let nextDev = devs.first(where: { $0 != currentDev }) {
-                c.videoDevice = nextDev
+                try? c.setVideodevice(newValue: nextDev)
             }
             result(nil)
 
@@ -177,8 +178,8 @@ import linphonesw
             let serverAddr = try Factory.Instance.createAddress(addr: serverUri)
 
             let params = try c.createAccountParams()
-            try params.setIdentityAddress(identity)
-            try params.setServerAddress(serverAddr)
+            try params.setIdentityaddress(newValue: identity)
+            try params.setServeraddress(newValue: serverAddr)
             params.registerEnabled = true
 
             let account = try c.createAccount(params: params)
@@ -195,8 +196,8 @@ import linphonesw
         let targetUri = target.contains("@") ? target : "sip:\(target)@\(c.defaultAccount?.params?.domain ?? "")"
         do {
             let addr = try Factory.Instance.createAddress(addr: targetUri)
-            if let params = c.createCallParams(call: nil) {
-                params.isVideoEnabled = video
+            if let params = try? c.createCallParams(call: nil) {
+                params.videoEnabled = video
                 _ = c.inviteAddressWithParams(addr: addr, params: params)
             }
         } catch {
@@ -206,7 +207,7 @@ import linphonesw
 
     // MARK: - CoreDelegate Call & Registration Handlers
 
-    func onRegistrationStateChanged(core: Core, account: Account, state: RegistrationState, message: String) {
+    func onAccountRegistrationStateChanged(core: Core, account: Account, state: RegistrationState, message: String) {
         var statusStr = "disconnected"
         switch state {
         case .Progress:
@@ -228,7 +229,7 @@ import linphonesw
     }
 
     func onCallStateChanged(core: Core, call: Call, state: Call.State, message: String) {
-        let isVideo = call.currentParams?.isVideoEnabled ?? false || call.remoteParams?.isVideoEnabled ?? false
+        let isVideo = call.currentParams?.videoEnabled ?? false || call.remoteParams?.videoEnabled ?? false
         let remoteIdentity = call.remoteAddress?.asStringUriOnly() ?? ""
         let mappedState = mapCallState(state)
 
