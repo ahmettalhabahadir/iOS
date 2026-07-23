@@ -1,5 +1,6 @@
-# Uncomment this line to define a global platform for your project
 platform :ios, '13.0'
+source 'https://cdn.cocoapods.org/'
+source 'https://gitlab.linphone.org/BC/public/podspec.git'
 
 # CocoaPods analytics sends network stats which can slow down build times.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
