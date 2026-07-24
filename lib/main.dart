@@ -12,10 +12,12 @@ import 'services/call_history_service.dart';
 import 'services/callkit_service.dart';
 import 'services/settings_service.dart';
 import 'services/sip_service.dart';
+import 'services/desktop_service.dart';
 import 'services/local_contacts_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DesktopService.instance.init();
   await Hive.initFlutter();
   await initializeDateFormatting('tr_TR', null);
   unawaited(ensureNotificationPermission());

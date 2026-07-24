@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../models/call_log_entry.dart';
 import 'call_history_service.dart';
 import 'callkit_service.dart';
+import 'desktop_service.dart';
 import 'local_contacts_service.dart';
 import 'sip_service.dart';
 
@@ -51,6 +52,7 @@ class CallCoordinator {
   }
 
   void _handleIncomingCall(SipCall call) {
+    DesktopService.instance.popUpWindowOnIncomingCall();
     final uuid = _uuid.v4();
     _pendingCallKitUuid = uuid;
 
