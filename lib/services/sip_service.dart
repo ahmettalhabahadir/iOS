@@ -223,20 +223,6 @@ class SipService extends ChangeNotifier {
     _lastCallEnd = null;
     notifyListeners();
 
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      _currentCall = SipCall(
-        id: cleanTarget,
-        remote_identity: cleanTarget,
-        remote_display_name: cleanTarget,
-        direction: SipCallDirection.outgoing,
-        state: CallStateEnum.CONFIRMED,
-        remote_has_video: video,
-      );
-      onCallStateUpdated?.call(_currentCall!, CallStateEnum.CONFIRMED);
-      notifyListeners();
-      return;
-    }
-
     try {
       await _channel.invokeMethod('makeCall', {
         'target': cleanTarget,
@@ -248,31 +234,6 @@ class SipService extends ChangeNotifier {
   }
 
   Future<void> hangupCall() async {
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      final endTarget = _currentCall?.remote_identity ?? '';
-      _currentCall = null;
-      onCallStateUpdated?.call(
-        SipCall(
-          id: endTarget,
-          remote_identity: endTarget,
-          remote_display_name: endTarget,
-          direction: SipCallDirection.outgoing,
-          state: CallStateEnum.ENDED,
-        ),
-        CallStateEnum.ENDED,
-      );
-      onCallEnded?.call(
-        number: endTarget,
-        displayName: endTarget,
-        wasIncoming: false,
-        wasConnected: true,
-        wasRejected: false,
-        startedAt: _callStartedAt ?? DateTime.now(),
-        duration: DateTime.now().difference(_callStartedAt ?? DateTime.now()),
-      );
-      notifyListeners();
-      return;
-    }
     try {
       await _channel.invokeMethod('hangup');
     } catch (e) {
@@ -281,13 +242,6 @@ class SipService extends ChangeNotifier {
   }
 
   Future<void> answerCall() async {
-    if (defaultTargetPlatform == TargetPlatform.windows) {
-      if (_currentCall != null) {
-        onCallStateUpdated?.call(_currentCall!, CallStateEnum.CONFIRMED);
-      }
-      notifyListeners();
-      return;
-    }
     try {
       await _channel.invokeMethod('answer');
     } catch (e) {
