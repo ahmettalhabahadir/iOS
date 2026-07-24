@@ -101,123 +101,126 @@ class _DialerScreenState extends State<DialerScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return SafeArea(
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    textAlign: TextAlign.center,
-                    readOnly: true,
-                    showCursor: false,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: 'Dahili no girin',
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      filled: false,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-                AnimatedOpacity(
-                  opacity: _controller.text.isEmpty ? 0 : 1,
-                  duration: const Duration(milliseconds: 150),
-                  child: IconButton(
-                    onPressed: _backspace,
-                    icon: Icon(
-                      Icons.backspace_outlined,
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: GridView.count(
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 14,
-              childAspectRatio: 1,
-              children: [
-                for (final key in _keys)
-                  _DialerKey(digit: key[0], letters: key[1], onTap: _append),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 28),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Audio Call Button
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: CallColors.incoming.withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      textAlign: TextAlign.center,
+                      readOnly: true,
+                      showCursor: false,
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
                       ),
-                    ],
-                  ),
-                  child: FloatingActionButton(
-                    heroTag: 'call_audio',
-                    backgroundColor: CallColors.incoming,
-                    elevation: 0,
-                    onPressed: () => _call(),
-                    child: const Icon(
-                      Icons.call,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 24),
-                // Video Call Button
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: scheme.primary.withValues(alpha: 0.4),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
+                      decoration: const InputDecoration(
+                        hintText: 'Dahili no girin',
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        filled: false,
+                        contentPadding: EdgeInsets.zero,
                       ),
-                    ],
-                  ),
-                  child: FloatingActionButton(
-                    heroTag: 'call_video',
-                    backgroundColor: scheme.primary,
-                    elevation: 0,
-                    onPressed: () => _makeVideoCall(),
-                    child: const Icon(
-                      Icons.videocam,
-                      color: Colors.white,
-                      size: 28,
                     ),
                   ),
-                ),
-              ],
+                  AnimatedOpacity(
+                    opacity: _controller.text.isEmpty ? 0 : 1,
+                    duration: const Duration(milliseconds: 150),
+                    child: IconButton(
+                      onPressed: _backspace,
+                      icon: Icon(
+                        Icons.backspace_outlined,
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: GridView.count(
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 1.2,
+                children: [
+                  for (final key in _keys)
+                    _DialerKey(digit: key[0], letters: key[1], onTap: _append),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Audio Call Button
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: CallColors.incoming.withValues(alpha: 0.4),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton(
+                      heroTag: 'call_audio',
+                      backgroundColor: CallColors.incoming,
+                      elevation: 0,
+                      onPressed: () => _call(),
+                      child: const Icon(
+                        Icons.call,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  // Video Call Button
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: scheme.primary.withValues(alpha: 0.4),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton(
+                      heroTag: 'call_video',
+                      backgroundColor: scheme.primary,
+                      elevation: 0,
+                      onPressed: () => _makeVideoCall(),
+                      child: const Icon(
+                        Icons.videocam,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

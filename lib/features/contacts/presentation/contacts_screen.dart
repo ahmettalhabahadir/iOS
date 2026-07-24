@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart' as fc;
 import 'package:provider/provider.dart';
@@ -53,6 +54,13 @@ class _ContactsScreenState extends State<ContactsScreen> with SingleTickerProvid
       _isLoadingPhone = true;
       _phonePermissionDenied = false;
     });
+
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
+      setState(() {
+        _isLoadingPhone = false;
+      });
+      return;
+    }
 
     try {
       final hasPermission = await ensureContactsPermission();

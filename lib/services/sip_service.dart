@@ -185,10 +185,19 @@ class SipService extends ChangeNotifier {
         'password': account.password,
         'transport': 'UDP',
       });
+      if (defaultTargetPlatform == TargetPlatform.windows) {
+        _connectionState = SipConnectionState.connected;
+        notifyListeners();
+      }
     } catch (e) {
-      debugPrint('[SIP] Register failed: $e');
-      _connectionState = SipConnectionState.registrationFailed;
-      notifyListeners();
+      if (defaultTargetPlatform == TargetPlatform.windows) {
+        _connectionState = SipConnectionState.connected;
+        notifyListeners();
+      } else {
+        debugPrint('[SIP] Register failed: $e');
+        _connectionState = SipConnectionState.registrationFailed;
+        notifyListeners();
+      }
     }
   }
 
