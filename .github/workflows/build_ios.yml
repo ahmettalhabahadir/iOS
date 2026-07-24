@@ -1,4 +1,4 @@
-name: Build iOS Simulator App
+name: Build iOS App (Simulator & Physical Device)
 
 on:
   push:
@@ -31,13 +31,29 @@ jobs:
       - name: Build iOS Simulator App
         run: flutter build ios --simulator --no-codesign
 
-      - name: Zip Runner.app
+      - name: Zip Runner.app (Simulator)
         run: |
           cd build/ios/iphonesimulator
           zip -r Runner.app.zip Runner.app
 
-      - name: Upload iOS App Artifact
+      - name: Upload iOS Simulator App Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-app
           path: build/ios/iphonesimulator/Runner.app.zip
+
+      - name: Build iOS Physical Device App
+        run: flutter build ios --no-codesign
+
+      - name: Create Runner.ipa for Physical iPhone
+        run: |
+          mkdir -p build/ios/iphoneos/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/
+          cd build/ios/iphoneos
+          zip -r Runner.ipa Payload
+
+      - name: Upload iOS Physical Device IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-device-ipa
+          path: build/ios/iphoneos/Runner.ipa
