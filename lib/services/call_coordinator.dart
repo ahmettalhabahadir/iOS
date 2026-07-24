@@ -144,20 +144,25 @@ class CallCoordinator {
 
   void _openActiveCallScreen() {
     if (_activeCallScreenOpen) return;
-    final nav = navigatorKey.currentState;
-    if (nav == null) return;
     _activeCallScreenOpen = true;
     _callGeneration++;
-    nav.pushNamed(activeCallRoute);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nav = navigatorKey.currentState;
+      if (nav != null && nav.mounted) {
+        nav.pushNamed(activeCallRoute);
+      }
+    });
   }
 
   void _closeActiveCallScreen() {
     if (!_activeCallScreenOpen) return;
     _activeCallScreenOpen = false;
-    final nav = navigatorKey.currentState;
-    if (nav != null && nav.canPop()) {
-      nav.pop();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final nav = navigatorKey.currentState;
+      if (nav != null && nav.canPop()) {
+        nav.pop();
+      }
+    });
   }
 
   /// Called by ActiveCallScreen when it is popped by any means other than
